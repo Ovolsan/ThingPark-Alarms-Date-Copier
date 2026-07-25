@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ThingPark Alarms Date Copier
 // @namespace    http://tampermonkey.net/
-// @version      1.1
+// @version      1.2
 // @description  Копіювання дати й часу по кліку із автозаміною Today на YYYY-MM-DD із таблиці відновлених тривог на сайті ThingPark.
 // @author       Ovolya
 // @match        *://ui-iot.kyivcity.gov.ua/*
@@ -13,32 +13,39 @@
 (function() {
     'use strict';
 
+    // Допоміжна функція для форматування дати у YYYY-MM-DD
+    function formatDate(dateObj) {
+        const year = dateObj.getFullYear();
+        const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+        const day = String(dateObj.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
     function makeCopyable(cell) {
-        // Защита от дублирования обработчиков
+        // Захист від дублювання обробників
         if (cell.dataset.copyBound) return;
         cell.dataset.copyBound = "true";
 
         cell.style.cursor = 'pointer';
-        cell.title = 'Тик, аби скопіювати дату й час';
+        cell.title = 'Натисніть, щоб скопіювати дату/час';
 
         cell.addEventListener('click', function(e) {
             e.stopPropagation();
 
             let textToCopy = cell.innerText.trim();
+            const now = new Date();
 
-            // Проверяем, есть ли слово "today" (игнорируя регистр)
+            // Перевіряємо та замінюємо Today
             if (/today/i.test(textToCopy)) {
-                // Получаем текущую дату
-                const now = new Date();
-                const year = now.getFullYear();
-                // Добавляем нули спереди для месяцев и дней (например, 07 вместо 7)
-                const month = String(now.getMonth() + 1).padStart(2, '0');
-                const day = String(now.getDate()).padStart(2, '0');
-
-                const todayDate = `${year}-${month}-${day}`;
-
-                // Заменяем "Today" на YYYY-MM-DD.
+                const todayDate = formatDate(now);
                 textToCopy = textToCopy.replace(/today/i, todayDate);
+            } 
+            // Перевіряємо та замінюємо Yesterday
+            else if (/yesterday/i.test(textToCopy)) {
+                const yesterday = new Date(now);
+                yesterday.setDate(now.getDate() - 1); // Віднімаємо 1 день
+                const yesterdayDate = formatDate(yesterday);
+                textToCopy = textToCopy.replace(/yesterday/i, yesterdayDate);
             }
 
             if (textToCopy) {
@@ -47,17 +54,17 @@
                     const originalTransition = cell.style.transition;
 
                     cell.style.transition = 'background-color 0.3s ease';
-                    cell.style.backgroundColor = '#d4edda'; // Зеленая подсветка
+                    cell.style.backgroundColor = '#d4edda'; // Зелена підсвітка
 
                     setTimeout(() => {
                         cell.style.backgroundColor = originalBg;
-
+                        
                         setTimeout(() => {
                             cell.style.transition = originalTransition;
                         }, 300);
                     }, 700);
                 }).catch(err => {
-                    console.error('Не удалось скопировать текст: ', err);
+                    console.error('Не вдалося скопіювати текст: ', err);
                 });
             }
         });
@@ -65,13 +72,13 @@
 
     const observer = new MutationObserver(() => {
         const rows = document.querySelectorAll('table.table-bordered.table-striped tbody tr');
-
+        
         rows.forEach(row => {
             const cells = row.querySelectorAll('td');
             if (cells.length >= 4) {
                 const creationDateCell = cells[2];
                 const clearanceDateCell = cells[3];
-
+                
                 if (creationDateCell) makeCopyable(creationDateCell);
                 if (clearanceDateCell) makeCopyable(clearanceDateCell);
             }
