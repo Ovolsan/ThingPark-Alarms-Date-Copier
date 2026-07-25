@@ -5,6 +5,8 @@
 // @description  Копіювання дати й часу по кліку із автозаміною Today на YYYY-MM-DD із таблиці відновлених тривог на сайті ThingPark.
 // @author       Ovolya
 // @match        *://ui-iot.kyivcity.gov.ua/*
+// @updateURL    https://github.com/Ovolsan/ThingPark-Alarms-Date-Copier/raw/refs/heads/main/ThingPark%20Alarms%20Date%20Copier/ThingPark%20Alarms%20Date%20Copier.user.js
+// @downloadURL  https://github.com/Ovolsan/ThingPark-Alarms-Date-Copier/raw/refs/heads/main/ThingPark%20Alarms%20Date%20Copier/ThingPark%20Alarms%20Date%20Copier.user.js
 // @grant        none
 // ==/UserScript==
 
