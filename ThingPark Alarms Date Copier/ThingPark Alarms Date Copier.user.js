@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         ThingPark Alarms Date Copier
 // @namespace    http://tampermonkey.net/
-// @version      1.2
-// @description  Копіювання дати й часу по кліку із автозаміною Today на YYYY-MM-DD із таблиці відновлених тривог на сайті ThingPark.
+// @version      20260726
+// @description  * Копіювання LRR-ID із Base stations. * Копіювання дати й часу по кліку із автозаміною Today та Yesterday на YYYY-MM-DD із таблиці відновлених тривог на сайті ThingPark.
 // @author       Ovolya
 // @match        *://ui-iot.kyivcity.gov.ua/*
 // @updateURL    https://github.com/Ovolsan/ThingPark-Alarms-Date-Copier/raw/refs/heads/main/ThingPark%20Alarms%20Date%20Copier/ThingPark%20Alarms%20Date%20Copier.user.js
